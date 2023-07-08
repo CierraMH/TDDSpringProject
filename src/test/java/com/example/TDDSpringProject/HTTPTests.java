@@ -70,6 +70,62 @@ public class HTTPTests {
                         .delete("/delete/{id}", 1L))
                 .andExpect(status().isOk());
     }
+    @Test
+    public void emptyCustomerName() throws Exception{
+       OrderEntity orderToAdd= new OrderEntity("", LocalDate.now(), "address1", 10.99);
+       Mockito.when(orderService.saveOrder(Mockito.any())).thenReturn(orderToAdd);
+
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .post("/create")
+                .content(asJsonString(orderToAdd))
+                .contentType(MediaType.APPLICATION_JSON))
+        .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void emptyAddress() throws Exception{
+        OrderEntity orderToAdd= new OrderEntity("name", LocalDate.now(), "", 10.99);
+        Mockito.when(orderService.saveOrder(Mockito.any())).thenReturn(orderToAdd);
+
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/create")
+                        .content(asJsonString(orderToAdd))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void totalEqualsLessThanZero() throws Exception{
+        OrderEntity orderToAdd= new OrderEntity("name", LocalDate.now(), "address", -2.99);
+        Mockito.when(orderService.saveOrder(Mockito.any())).thenReturn(orderToAdd);
+
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .post("/create")
+                        .content(asJsonString(orderToAdd))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+
+    @Test
+    public void deleteNonExistant() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders
+                        .delete("/delete/{id}", 1L))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    public void updateNonExistant() throws Exception {
+        OrderEntity updatedOrder = new OrderEntity("C. Ha", LocalDate.now(), "456 Somewhere Way", 20.00);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                        .put("/update/{id}", 1L)
+                        .content(asJsonString(updatedOrder))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isNotFound());
+    }
 
     public static String asJsonString(final Object object) {
         try {
