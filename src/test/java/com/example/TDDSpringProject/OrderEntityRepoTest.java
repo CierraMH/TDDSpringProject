@@ -3,17 +3,12 @@ package com.example.TDDSpringProject;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.context.SpringBootTest;
-
-
 import java.time.LocalDate;
-import static org.junit.jupiter.api.Assertions.*;
 import java.util.List;
+import java.util.Optional;
 
 @SpringBootTest
-@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 class OrderEntityRepoTest {
 
     @Autowired
@@ -26,7 +21,6 @@ class OrderEntityRepoTest {
         Assertions.assertThat(orderEntity.getId()).isGreaterThan(0);
         Assertions.assertThat(orderEntity).isEqualTo(savedOrder);
     }
-
     @Test
     void testReadOrderList(){
         List<OrderEntity> orders = orderRepository.findAll();
@@ -43,17 +37,12 @@ class OrderEntityRepoTest {
         Assertions.assertThat(updatedOrder.getCustomerName()).isEqualTo("CustomerUpdateNewName");
     }
     @Test
-    @org.junit.jupiter.api.Order(5)
     public void testDeleteOrderById(){
         OrderEntity order = new OrderEntity("CustomerDeleteName",LocalDate.now(),"123 Main Plano,Tx 75025",11.00);
-        order.setId(Long.valueOf(2));
         orderRepository.save(order);
-        Long id = 2L;
-        boolean current1 = orderRepository.findById(id).isPresent();
-        orderRepository.deleteById(id);
-        boolean noMore = orderRepository.findById(id).isPresent();
-        assertTrue(current1);
-        assertFalse(noMore);
+        orderRepository.deleteById(order.getId());
+        Optional<OrderEntity> orderGone = orderRepository.findById(order.getId());
+        Assertions.assertThat(orderGone).isEmpty();
 
     }
 }
