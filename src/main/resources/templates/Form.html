@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="https://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Form</title>
+</head>
+<body>
+<h2>Form</h2>
+<p><a href="/orderEntity">List of orderEntities</a></p>
+<form th:action="@{/orderEntity(id=${orderEntity.id})}" th:object="${orderEntity}" method="post">
+    <label for="customerName">Your Name: </label>
+    <input type="text" th:field="*{customerName}" id="customerName">
+    <label for="shippingAddress">Your Shipping Address: </label>
+    <input type="text" th:field="*{shippingAddress}" id="shippingAddress">
+    <label for="total">Total: </label>
+    <input type="number" th:field="*{total}" id="total">
+    <input type="submit" th:value="Submit">
+</form>
+<p>Wanna go back to the home page?<a href="/"> Select here!</a></p>
+</body>
+</html>
