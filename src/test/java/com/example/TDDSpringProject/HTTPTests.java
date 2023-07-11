@@ -73,9 +73,7 @@ public class HTTPTests {
     @Test
     public void emptyCustomerName() throws Exception{
        OrderEntity orderToAdd= new OrderEntity("", LocalDate.now(), "address1", 10.99);
-       Mockito.when(orderService.saveOrder(Mockito.any())).thenReturn(orderToAdd);
-
-
+       Mockito.when(orderServices.createOrder(Mockito.any())).thenReturn(orderToAdd);
         mockMvc.perform(MockMvcRequestBuilders
                 .post("/create")
                 .content(asJsonString(orderToAdd))
@@ -86,9 +84,7 @@ public class HTTPTests {
     @Test
     public void emptyAddress() throws Exception{
         OrderEntity orderToAdd= new OrderEntity("name", LocalDate.now(), "", 10.99);
-        Mockito.when(orderService.saveOrder(Mockito.any())).thenReturn(orderToAdd);
-
-
+        Mockito.when(orderServices.createOrder(Mockito.any())).thenReturn(orderToAdd);
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/create")
                         .content(asJsonString(orderToAdd))
@@ -99,9 +95,7 @@ public class HTTPTests {
     @Test
     public void totalEqualsLessThanZero() throws Exception{
         OrderEntity orderToAdd= new OrderEntity("name", LocalDate.now(), "address", -2.99);
-        Mockito.when(orderService.saveOrder(Mockito.any())).thenReturn(orderToAdd);
-
-
+        Mockito.when(orderServices.createOrder(Mockito.any())).thenReturn(orderToAdd);
         mockMvc.perform(MockMvcRequestBuilders
                         .post("/create")
                         .content(asJsonString(orderToAdd))
